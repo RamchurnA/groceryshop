@@ -47,7 +47,7 @@ const data = {
             category: 'vegetables',
             image: '/images/chayotes.JPG',
             price: 5,
-            countInStock: 10,
+            countInStock: 0,
             rating: 4.5,
             numReviews: 10,
             description: '10 Chayotes per pack',

@@ -7,7 +7,9 @@ export const Store = createContext();
 
 const initialState = {
     cart: {
-        cartItems: [],
+        cartItems: localStorage.getItem('cartItems')
+        ? JSON.parse(localStorage.getItem('cartItems'))
+        :[],
     },
 };
 
@@ -27,7 +29,21 @@ function reducer(state, action) {
             )
             : [...state.cart.cartItems, newItem]
             console.log(newItem);
-            return {...state, cart: {...state.cart, cartItems }}
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+            return {...state, cart: {...state.cart, cartItems }};
+        case 'CART_REMOVE_ITEM': {
+            const cartItems = state.cart.cartItems.filter(
+                (item) => item._id !== action.payload._id
+            );
+            console.log(cartItems);
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+            return {...state, cart: {...state.cart, cartItems}};
+
+            // here we are filtering out the item passed,
+            // the filter function filters all values except the one passed.
+            // basically return all values that is not the item passed 
+
+        }
         default:
             return state;
     }
