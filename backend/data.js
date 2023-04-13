@@ -1,8 +1,25 @@
+import bcrypt from 'bcryptjs';
 const data = {
+    users:[
+        {
+            name: 'Bean',
+            email: 'bean@email.com',
+            password: bcrypt.hashSync('Testing123'),
+            isAdmin: true,
+        },
+        {
+            name: 'user1',
+            email: 'user1@email.com',
+            password: bcrypt.hashSync('123'),
+            isAdmin: false,
+        },
+
+    ],
+
     products: [
 
         {
-            _id: '1',
+            //_id: '1',
             name: 'Gala Apples',
             slug: 'gala-apples', //what you will see in the url
             category: 'fruits',
@@ -15,7 +32,7 @@ const data = {
         },
 
         {
-            _id: '2',
+            //_id: '2',
             name: 'Longan',
             slug: 'longan', //what you will see in the url
             category: 'fruits',
@@ -28,7 +45,7 @@ const data = {
         },
 
         {
-            _id: '3',
+            //_id: '3',
             name: 'Dragon Fruit',
             slug: 'dragon-fruit',
             category: 'fruits',
@@ -41,7 +58,7 @@ const data = {
         },
 
         {
-            _id: '4',
+            //_id: '4',
             name: 'Chayotes',
             slug: 'chayotes',
             category: 'vegetables',

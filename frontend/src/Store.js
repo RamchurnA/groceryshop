@@ -6,10 +6,19 @@ export const Store = createContext();
 // its a wrap for our app to pass global props to children
 
 const initialState = {
+    userInfo: localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))
+    : null,
     cart: {
         cartItems: localStorage.getItem('cartItems')
         ? JSON.parse(localStorage.getItem('cartItems'))
         :[],
+        shippingAddress: localStorage.getItem('shippingAddress')
+        ? JSON.parse(localStorage.getItem('shippingAddress')) // here The JSON.parse() static method parses a JSON string, constructing the JavaScript value or object described by the string.
+        : {},
+        dispatchMethod: localStorage.getItem('dispatchMethod')
+        ? localStorage.getItem('dispatchMethod')
+        : ''
     },
 };
 
@@ -44,6 +53,20 @@ function reducer(state, action) {
             // basically return all values that is not the item passed 
 
         }
+        case 'USER_SIGNIN':
+            return {...state, userInfo: action.payload};
+        case 'USER_SIGNOUT':
+            localStorage.removeItem('dispatchMethod');
+            return {...state, userInfo: null, 
+                    cart: {
+                        cartItems: [], dispatchMethod: ''
+                    }};
+        case 'CART_CLEAR':
+            return {...state, cart: {cartItems: [] , dispatchMethod: ''}}
+        case 'SAVE_DISPATCH_METHOD':
+            return {...state, cart: {...state.cart, dispatchMethod: action.payload}};
+        case 'SAVE_SHIPPING_ADDRESS':
+            return {...state, cart: {...state.cart, shippingAddress: action.payload,},};
         default:
             return state;
     }
