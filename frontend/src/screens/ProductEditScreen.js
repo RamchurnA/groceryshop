@@ -220,6 +220,15 @@ export default function ProductEditScreen() {
                     required
                 />
             </Form.Group>
+
+            <Form.Group className="mb-3" controlId="countInStock">
+                <Form.Label>Count In Stock</Form.Label>
+                <Form.Control
+                    value={countInStock}
+                    onChange={(e) => setCountInStock(e.target.value)}
+                    required
+                />
+            </Form.Group>
             <div className="mb-3">
                 <Button disabled={loadingUpdate} type="submit">Update</Button>
                 {loadingUpdate && <LoadingBox></LoadingBox>}
