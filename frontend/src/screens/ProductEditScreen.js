@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useReducer, useState } from 'react'
 import { useContext } from 'react'
 import Container from 'react-bootstrap/Container';
+import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { Helmet } from 'react-helmet-async';
@@ -55,6 +56,7 @@ export default function ProductEditScreen() {
     const [slug, setSlug] = useState('');
     const [price, setPrice] = useState('');
     const [image, setImage] = useState('');
+    const [images, setImages] = useState([]);
     const [category, setCategory] = useState('');
     const [countInStock, setCountInStock] = useState('');
     const [description, setDescription] = useState('');
@@ -69,6 +71,7 @@ export default function ProductEditScreen() {
                 setSlug(data.slug);
                 setPrice(data.price);
                 setImage(data.image);
+                setImages(data.images)
                 setCategory(data.category);
                 setCountInStock(data.countInStock);
                 setDescription(data.description);
@@ -101,6 +104,7 @@ export default function ProductEditScreen() {
                     slug,
                     price,
                     image,
+                    images,
                     category,
                     countInStock,
                     description,
@@ -123,7 +127,7 @@ export default function ProductEditScreen() {
 
     };
 
-    const uploadFileHandler = async (e) => {
+    const uploadFileHandler = async (e, forImages) => {
         const file = e.target.files[0];
         const bodyFormData = new FormData();
         bodyFormData.append('file', file);
@@ -138,10 +142,14 @@ export default function ProductEditScreen() {
                 },
             });
             dispatch({ type: 'UPLOAD_SUCCESS' });
-            toast.success('Image uploaded successfully. click update to apply images');
-            setImage(data.secure_url);
-            
+            if (forImages) {
+                setImages([...images, data.secure_url]);
 
+            } else {
+                setImage(data.secure_url);
+            }
+            toast.success('Image uploaded successfully. click update to apply images');
+            
         } catch(err) {
             toast.error(getError(err));
             dispatch({ type: 'UPLOAD_FAIL', payload: getError(err) });
@@ -149,6 +157,11 @@ export default function ProductEditScreen() {
         }
 
     };
+
+    const deleteFileHandler = async (fileName) => {
+        setImages(images.filter((x) => x !== fileName));
+        toast.success('Image removed successfully. click update to apply');
+    }
 
 
   return (
@@ -202,6 +215,32 @@ export default function ProductEditScreen() {
                 <Form.Control type="file" onChange={uploadFileHandler} />
                 {loadingUpload && <LoadingBox></LoadingBox>}
             </Form.Group>
+
+            <Form.Group className="mb-3" controlId='additionalImage'>
+                <Form.Label>Additional Images</Form.Label>
+                {images.length === 0 && <MessageBox>No image</MessageBox>}
+                <ListGroup variant="flush">
+                    {images.map((x) => (
+                        <ListGroup.Item key={x}>
+                            {x}
+                            <Button variant="light" onClick={() => deleteFileHandler(x)}>
+                                <i className="fa fa-times-circle"></i>
+                            </Button>
+                        </ListGroup.Item>
+                    ))}
+                </ListGroup>
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="additionalImageFile">
+                <Form.Label>Upload Additional Image</Form.Label>
+                <Form.Control
+                    type="file"
+                    onChange={(e) => uploadFileHandler(e, true)}
+                />
+                {loadingUpload && <LoadingBox></LoadingBox>}
+            </Form.Group>
+
+
 
             <Form.Group className="mb-3" controlId="category">
                 <Form.Label>Category</Form.Label>

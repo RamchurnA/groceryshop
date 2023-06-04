@@ -13,7 +13,7 @@ export default function ShippingAddressScreen() {
     const { state, dispatch: ctxDispatch } = useContext(Store);
   const {
     userInfo,
-    cart: { shippingAddress, },
+    cart: { shippingAddress },
   } = state;
 
   console.log(shippingAddress);

@@ -198,7 +198,7 @@ export default function PlaceOrderScreen() {
                                             <Link to={`/product/${item.slug}`}>{item.name}</Link>
                                         </Col>
                                         <Col md={3}><span>{item.quantity}</span></Col>
-                                        <Col md={3}>£{item.price}</Col>
+                                        <Col md={3}>£{item.price.toFixed(2)}</Col>
                                     </Row>
                                 </ListGroup.Item>
                             ))}
@@ -215,7 +215,7 @@ export default function PlaceOrderScreen() {
                             <ListGroup.Item>
                                 <Row>
                                     <Col>Items</Col>
-                                    <Col>£{cart.itemsPrice}</Col>
+                                    <Col>£{cart.itemsPrice.toFixed(2)}</Col>
                                 </Row>
                             </ListGroup.Item>
                             <ListGroup.Item>

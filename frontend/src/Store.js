@@ -62,7 +62,7 @@ function reducer(state, action) {
                         cartItems: [], dispatchMethod: ''
                     }};
         case 'CART_CLEAR':
-            return {...state, cart: {cartItems: [] , dispatchMethod: ''}}
+            return {...state, cart: {...state.cart, cartItems: [] , dispatchMethod: ''}}
         case 'SAVE_DISPATCH_METHOD':
             return {...state, cart: {...state.cart, dispatchMethod: action.payload}};
         case 'SAVE_SHIPPING_ADDRESS':

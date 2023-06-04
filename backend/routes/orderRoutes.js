@@ -3,12 +3,13 @@ import expressAsyncHandler from 'express-async-handler';
 import Order from '../models/orderModel.js';
 import Product from '../models/productModels.js';
 import User from '../models/userModel.js'
-import { isAdmin, isAuth } from '../utils.js';
+import { isAdmin, isAuth, mailgun, payOrderEmailTemplate } from '../utils.js';
 
 const orderRouter = express.Router();
 
 orderRouter.get('/',isAuth, isAdmin, expressAsyncHandler(async (req, res) => {
   const orders = await Order.find().populate('user', 'name');
+  console.log(orders);
 
   res.send(orders);
 
@@ -33,8 +34,28 @@ orderRouter.post(
       isPaid: true,
       paidAt: Date.now(),
     });
+    
 
     const order = await newOrder.save();
+    const user = await User.findById(req.user._id);
+    const userName = user.name;
+    const userEmail = user.email;
+
+    mailgun().messages().send({
+      from: 'Amazona <amazona@mg.yourdomain.com>',
+      to: `${userName} <${userEmail}>`,
+      subject: `New order ${order._id}`,
+      html: payOrderEmailTemplate(order, userName),
+    },
+    (error, body) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log(body)
+      }
+    }  
+    );
+    
     res.status(201).send({ message: 'New Order Created', order });
   })
 );
@@ -99,8 +120,16 @@ orderRouter.get(
   isAuth,
   expressAsyncHandler(async (req, res) => {
     const order = await Order.findById(req.params.id);
+
+    const user = await User.findById(req.user._id);
+    const userName = user.name;
+    const userEmail = user.email;
+
+    console.log(userEmail);
+    console.log(order.deliveryImages);
     if (order) {
       res.send(order);
+      //console.log(order.user.name)
     } else {
       res.status(404).send({ message: 'Order Not Found' });
     }
@@ -123,6 +152,32 @@ orderRouter.put(
       };
 
       const updatedOrder = await order.save();
+      //console.log(order);
+
+      setTimeout(()=>{mailgun().messages().send({
+        from: 'Beanery <Beanery.com>',
+        to: `${order.user.name} <${order.user.email}>`,
+        subject: `New order ${order._id}`,
+        html: payOrderEmailTemplate(order),
+      }, (error, body) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log(body)
+        }
+      })}, 3000)
+      // mailgun().messages().send({
+      //   from: 'Beanery <Beanery.com>',
+      //   to: `${order.user.name} <${order.user.email}>`,
+      //   subject: `New order ${order._id}`,
+      //   html: payOrderEmailTemplate(order),
+      // }, (error, body) => {
+      //   if (error) {
+      //     console.log(error);
+      //   } else {
+      //     console.log(body)
+      //   }
+      // })
       res.send({ message: 'Order Paid', order: updatedOrder});
       
     } else {
@@ -140,6 +195,7 @@ orderRouter.put(
     if (order) {
       order.isDelivered = true;
       order.deliveredAt = Date.now();
+      order.deliveryImages = req.body.deliveryImages;
       await order.save();
       res.send({ message: 'Order Delivered' });
     } else {

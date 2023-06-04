@@ -220,8 +220,30 @@ export default function OrderScreen() {
                                     <Button type="button" onClick={deliverOrderHandler}>
                                         Deliver Order
                                     </Button>
+                                    <Link to={`/admin/deliver/${orderId}`}>
+                                    <Button type="button">
+                                        Deliver Order Link
+                                    </Button>
+
+                                    </Link>
+                                
                                     </div>
                                 </ListGroup.Item>
+                            )}
+                            {order.isDelivered && order.deliveryImages.length !==0 && (
+                              <ListGroup variant="flush">
+                                <h3>Proof of Delivery</h3>
+
+                                <Col md={10}>
+                                      <img
+                                      src={order.deliveryImages}
+                                      alt={order.name}
+                                      className="img-fluid"
+                                      ></img>{' '}
+                                </Col>
+
+                              </ListGroup>
+                                
                             )}
                         </ListGroup>
                     </Card.Body>
