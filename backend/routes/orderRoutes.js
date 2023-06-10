@@ -40,12 +40,13 @@ orderRouter.post(
     const user = await User.findById(req.user._id);
     const userName = user.name;
     const userEmail = user.email;
+    const userIsGuest = user.isGuest;
 
     mailgun().messages().send({
       from: 'Amazona <amazona@mg.yourdomain.com>',
       to: `${userName} <${userEmail}>`,
       subject: `New order ${order._id}`,
-      html: payOrderEmailTemplate(order, userName),
+      html: payOrderEmailTemplate(order, userName, userIsGuest),
     },
     (error, body) => {
       if (error) {

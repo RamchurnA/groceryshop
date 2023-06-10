@@ -51,7 +51,7 @@ export const mailgun = () => mg({
 });
 
 
-export const payOrderEmailTemplate = (order, userName) => {
+export const payOrderEmailTemplate = (order, userName, userIsGuest) => {
     return `<h1>Thanks for shopping with us</h1>
     <p>
     Hi ${userName},</p>
@@ -107,6 +107,9 @@ export const payOrderEmailTemplate = (order, userName) => {
     <p>
     Thanks for shopping with us.
     </p>
+    <h2>${userIsGuest === true ? 'We have created a guest account for you to see your order.'  : ''}</h2>
+    <p>${userIsGuest === true ? 'Use the link below to navigate back to the site and add your password'  : ''}</p>
+    ${userIsGuest === true ? `<a href=${baseUrl()}/profile>Click the following link</a>` : ''}
     `;
 };
 

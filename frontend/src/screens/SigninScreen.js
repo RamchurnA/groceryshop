@@ -19,7 +19,10 @@ export default function SigninScreen() {
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
 
-  const { userInfo } = state;
+  const { userInfo, cart } = state;
+  console.log(cart.cartItems);
+
+  console.log(userInfo);
 
   const submitHandler = async (e) => {
     e.preventDefault(); // prevents refreshing the page
@@ -73,6 +76,9 @@ export default function SigninScreen() {
         <div className="mb-3">
           Forgot Password? <Link to={`/forget-password`}>Reset Password</Link>
         </div>
+        {cart.cartItems.length !==0 || userInfo !== null ? <div className="mb-3">
+          Checkout as Guest? <Link to={`/checkoutasguest`}>Checkout as Guest</Link>
+        </div> : ''}
 
       </Form>
 

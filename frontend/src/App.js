@@ -35,6 +35,7 @@ import SearchScreen from './screens/SearchScreen';
 import ForgetPasswordScreen from './screens/ForgetPasswordScreen';
 import ResetPasswordScreen from './screens/ResetPasswordScreen';
 import DeliverOrder from './screens/DeliverOrder';
+import CheckoutAsGuest from './screens/CheckoutAsGuest';
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
@@ -169,6 +170,7 @@ function App() {
             <Route path="/search" element={<SearchScreen />} />
             <Route path="/signin" element={<SigninScreen />} />
             <Route path="/signup" element={<SignUpScreen />} />
+            <Route path="/checkoutasguest" element={<CheckoutAsGuest />} />
             <Route path="/forget-password" element={<ForgetPasswordScreen/>} />
             <Route
                 path="/reset-password/:token"

@@ -62,7 +62,9 @@ export default function CartScreen() {
 
         if (dispatchMethodName === 'Delivery') {
             navigate('/signin?redirect=/shipping')
-        } else {
+        } else if(dispatchMethodName === 'Collection') {
+            navigate('/signin?redirect=/placeorder')
+        }else {
             navigate('/placeorder')
         }
 

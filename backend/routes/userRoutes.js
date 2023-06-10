@@ -114,7 +114,7 @@ userRouter.post(
 );
 
 userRouter.put(
-  '/profile',
+  '/pid/profile',
   isAuth,
   expressAsyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id);
@@ -138,6 +138,37 @@ userRouter.put(
     }
   })
 );
+
+userRouter.post(
+  '/guestsignup',
+  expressAsyncHandler(async (req, res) => {
+      const passwordLength = 10;
+      const charSet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=';
+      let password = '';
+      for (let i = 0; i < passwordLength; i++) {
+        const randomIndex = Math.floor(Math.random() * charSet.length);
+        password += charSet[randomIndex];
+      }
+
+      const newUser = new User({ // creating a new instance of user
+          name: req.body.name,
+          email: req.body.email,
+          password: bcrypt.hashSync(password),
+          isGuest: true,
+      });
+      const user = await newUser.save();
+      res.send({
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          isAdmin: user.isAdmin,
+          isGuest: user.isGuest,
+          token: generateToken(user),
+      });
+  })
+);
+
+
 
 userRouter.post(
   '/forget-password',
